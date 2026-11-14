@@ -108,7 +108,8 @@ Pedigree class of every pair of cows; replicates 1 / 2 / 3. Mean G is not availa
 ## 5. Herds
 
 The number of herds is set so that the target share has one cow. The other herds take sizes from the real multi-cow
-herds. **Cows are shuffled into herds at random.** Mean over replicates.
+herds of the AADGG Tanzania data set of Houaga et al. (2026). **Cows are shuffled into herds at random.** Mean over
+replicates.
 
 | Cows | Single-cow herds: target / realised | Herds | Cows in single-cow herds | Herds with 2 / 3 / 4 / 5+ cows | Herd-mate pairs | … that are half-sisters |
 |---|---|---|---|---|---|---|
@@ -126,6 +127,10 @@ Herd-mates are related exactly as often as any two cows (half-sister pairs are 2
 1,000, 2,000 and 4,000 cows). The herd variance has to be learned from these few hundred herd-mate pairs.
 
 ## 6. The map and the spatial field
+
+The herds sit at the farm locations of the AADGG Tanzania data set of Houaga et al. (2026). Each location is projected
+to km and moved by a random 1 km jitter; farms are reused when a data set has more herds than the 1,386 real farms. So
+this section describes the real farm layout, given only as distances and counts.
 
 - **Area:** about 710 × 710 km in 4 regions.
 - **Farm clusters:** farms sit in clusters, so the median distance from a herd to the nearest other herd is 0.4–1.0 km.

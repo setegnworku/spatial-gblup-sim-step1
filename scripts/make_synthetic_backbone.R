@@ -8,11 +8,12 @@
 # true sizes of the fixed effects. That file is built from the real data and is not shared. This script makes a file
 # with the SAME FORMAT from invented values, so that every step of the pipeline can be run and checked by anyone.
 #
-# WHAT IS INVENTED (nothing below comes from the real data, except the published herd-size counts):
+# WHAT IS INVENTED (nothing below comes from the real data, except the herd-size counts of the real data set of
+# Houaga et al. 2026, which the paper itself reports only as 1,386 herds, more than 71 % of them with one cow):
 #   herds    1,386 herds in 156 wards of 4 regions on a km grid of about 700 x 700 km; wards scattered around their
 #            region centre (sd 55 km), herds clustered around their ward centre (sd 3 km), so most herds have a
 #            neighbour within about a kilometre;
-#   cows     1,894 cows; herd sizes as reported for the real data (997 herds with 1 cow; 299 with 2, 71 with 3, 13 with
+#   cows     1,894 cows; herd sizes as in the real data set (997 herds with 1 cow; 299 with 2, 71 with 3, 13 with
 #            4, 5 with 5, 1 with 9), assigned to herds at random; one breed class;
 #   records  3-37 monthly test-days per cow (mean about 10) over 61 calendar months: first lactation group 1/2/3 with
 #            shares 0.54/0.34/0.12, days in milk 5-305, a 2-month dry period between lactations, age at test,
@@ -38,7 +39,7 @@ herds <- data.frame(herd = sprintf("H%04d", seq_len(n_herd)), region = paste0("R
                     x_km = round(xy[, 1] - min(xy[, 1]) + 5, 3), y_km = round(xy[, 2] - min(xy[, 2]) + 5, 3),
                     ward = sprintf("W%03d", herd_ward), stringsAsFactors = FALSE)
 
-# ---- cows: published herd-size counts, assigned to herds at random ----------------------------------------------
+# ---- cows: herd-size counts of the real data set, assigned to herds at random -------------------------------------
 sizes <- sample(c(rep(1L, 997), rep(2L, 299), rep(3L, 71), rep(4L, 13), rep(5L, 5), 9L))
 stopifnot(length(sizes) == n_herd, sum(sizes) == 1894L)
 cows <- data.frame(animal_id = sprintf("C%04d", seq_len(sum(sizes))), herd = rep(herds$herd, sizes), dgrp = 1L,

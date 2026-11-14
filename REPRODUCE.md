@@ -126,12 +126,17 @@ The simulator reads `data/backbone/backbone_tz.rds`, an R list with these elemen
 | `b` | named fixed-effect coefficients | only `dgrp2`–`dgrp4`, to remove the breed part of `Xb_true` |
 | `fixed_formula`, `meta` | formula and description | documentation |
 
-- **Route A (real backbone):** built from the field data analysed by Houaga et al. (2026). It contains real farm
-  locations, so it is **not in this repository**. Ask the authors; access depends on the data owners.
+- **Route A (real backbone):**
+  - Built by our script `scripts/real/00a_build_backbone.R` (not in this repository) from Isidore Houaga's AADGG
+    Tanzania data file `milk_yield_pheno_cleaned.csv`, the data of Houaga et al. (2026). The README, Section 10, lists
+    what is taken from it.
+  - It contains real farm locations, so it is **not in this repository**. Using it needs the permission of Isidore
+    Houaga and the data owners.
 - **Route B (synthetic backbone):** `scripts/make_synthetic_backbone.R` writes `synthetic/backbone_synthetic.rds`
   (included; seed 20261114). It has the same format, with invented values:
   - 1,386 herds in 156 clustered wards of 4 regions, on a grid of about 620 × 630 km;
-  - the published herd-size counts (997 herds with one cow, …);
+  - the herd-size counts of the real data set (997 herds with one cow, 299 with two, …; the paper itself reports only
+    1,386 herds, more than 71 % with one cow);
   - 1,894 cows and 19,251 monthly test-days (3–37 per cow, median 9) with lactations, age and lactation curve;
   - invented fixed effects (variance about 0.14).
 

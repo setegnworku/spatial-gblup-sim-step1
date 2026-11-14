@@ -40,7 +40,7 @@ breeding values. A simulation can, because:
 
 - we **choose the true values** (genetic, herd, spatial and residual variances; every cow's true breeding value);
 - we build data that **look like the real data**: herd locations, herd sizes and recording pattern are resampled from
-  the real data set;
+  the AADGG Tanzania data set of Houaga et al. (2026) (details in [Data not included](#10-data-not-included));
 - we fit **the same models with the same software and settings** (Houaga's fixed effects, mesh recipe and field prior,
   and INLA's default prior on the other variances, as in his script);
 - we compare every estimate with the truth, over many replicates.
@@ -506,8 +506,26 @@ about 45 min at 1,000 cows and 4 h at 2,000.
 
 ## 10. Data not included
 
-- **`data/backbone/backbone_tz.rds`** is built from the real field data analysed by Houaga et al. and is **not
-  shared**. It is an R list with:
+**Where the real structure comes from.** The herd structure and recording pattern of the simulation come from the
+AADGG Tanzania data set of **Houaga et al. (2026)**, Isidore Houaga's file `milk_yield_pheno_cleaned.csv`: 1,894 cows,
+1,386 herds, 19,375 test-day records. Our script `scripts/real/00a_build_backbone.R` (run once on a laptop; not in this
+repository) turned it into the backbone below.
+
+| Taken from that data set | How |
+|---|---|
+| Herd locations | GPS projected to km (EPSG:21035, as Houaga et al.), each moved by a random 1 km jitter; original herd IDs replaced |
+| Herd sizes | sizes of the real multi-cow herds (single-cow herds are set by the design) |
+| Region and ward of each herd | real membership, with new random ward IDs |
+| Recording pattern of each cow | number of test-days, calendar month, calving season, lactation group, age, lactation-curve covariates; original cow IDs replaced |
+| Fixed-effect sizes | one least-squares fit of the standardised milk yields on Houaga's fixed part; the milk records themselves are not kept |
+| True variances of the simulation | chosen to match Houaga et al.'s published estimates (herd 0.15, spatial about 0.32 across herds, range 33 km) |
+
+The models, fixed part, mesh recipe and field prior follow Houaga's public script `1.Scripts_Spatial_Modelling.R`
+(GitHub HighlanderLab/ihouaga_adgg_spatial). His genotypes and genomic relationship matrix were **not** used: the cows,
+their genomes and G are simulated.
+
+- **`data/backbone/backbone_tz.rds`** contains real farm locations and is therefore **not shared**. Sharing it would
+  need the permission of Isidore Houaga and the owners of the AADGG data. It is an R list with:
   - `herds`: one row per real herd; columns `herd`, `region`, `ward`, `x_km`, `y_km` (projected coordinates in km);
   - `cows`: `animal_id`, `herd`, `dgrp` (breed class);
   - `records`: one row per real test-day record; columns `animal_id`, `herd`, `tyrmn`, `cyrsn`, `dgrp`, `lacgr`,
@@ -517,8 +535,8 @@ about 45 min at 1,000 cows and 4 h at 2,000.
     the breed part);
   - `fixed_formula`, `meta`.
 
-  No milk record of the real data is used: the simulated phenotypes are built only from the simulated effects and the
-  fixed-effect sizes.
+  No real milk record enters the simulated data: the simulated phenotypes are built from the simulated effects plus the
+  fixed-effect sizes estimated once from the real milk yields.
 - **A synthetic stand-in is included:** `synthetic/backbone_synthetic.rds`, made by `scripts/make_synthetic_backbone.R`.
   It has the same format, with invented herd locations and recording patterns. With it the whole pipeline runs end to
   end; the results are similar in kind but not identical to the numbers above (REPRODUCE.md, route B).
