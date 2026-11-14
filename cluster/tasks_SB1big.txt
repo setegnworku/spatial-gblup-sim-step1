@@ -1,0 +1,10 @@
+# STEP 1 task table (this repository). One line = one data set: study | cell | replicate | simulation flags | models.
+# "--records one --spe 0" = one record per cow and no permanent environment. Submit with cluster/q_task.sbatch (see its
+# header). The project note docs/questions/SB_single_breed.md cited below is not in this repository; README.md holds
+# its step-1 content.
+# Step 1, N = 4,000 (no cross-validation): ONE record per cow, no pe
+SB1_one_record | n4000_p70 | 1 | --ncow 4000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_one_record | n4000_p70 | 2 | --ncow 4000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_one_record | n4000_p70 | 3 | --ncow 4000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_one_record | n4000_p70 | 4 | --ncow 4000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_one_record | n4000_p70 | 5 | --ncow 4000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS

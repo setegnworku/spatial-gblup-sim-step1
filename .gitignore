@@ -1,0 +1,8 @@
+# Simulated data sets, fits and logs are large (dense G matrices) and are rebuilt by the scripts.
+runs_q/
+runs/
+output/
+logs/
+*.rds
+# The backbone is derived from real field data and must never be committed.
+data/

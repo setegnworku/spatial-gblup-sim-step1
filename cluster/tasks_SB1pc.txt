@@ -1,0 +1,87 @@
+# STEP 1 task table (this repository). One line = one data set: study | cell | replicate | simulation flags | models.
+# "--records one --spe 0" = one record per cow and no permanent environment. Submit with cluster/q_task.sbatch (see its
+# header). The project note docs/questions/SB_single_breed.md cited below is not in this repository; README.md holds
+# its step-1 content.
+# Study SB, PC-prior arm of step 1 (docs/questions/SB_single_breed.md, S1-R5; Setegn's decision 9 Nov 2026): refit the SAME data
+# sets as SB1_one_record (data/ and truth/ copied into runs_q/SB1_pc/, so no simulation runs) with q_fit.R --priors pc. No CV.
+# Run with SIMSCRIPT=scripts/questions/sb_simulate.R (fallback only: same seeds give the same data) FITFLAGS="--priors pc".
+SB1_pc | n2000_p50 | 1 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 1 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 1 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 1 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 1 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 1 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 1 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 1 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 2 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 2 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 2 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 2 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 2 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 2 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 2 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 2 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 3 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 3 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 3 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 3 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 3 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 3 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 3 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 3 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 4 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 4 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 4 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 4 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 4 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 4 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 4 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 4 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 5 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 5 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 5 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 5 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 5 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 5 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 5 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 5 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 6 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 6 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 6 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 6 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 6 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 6 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 6 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 6 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 7 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 7 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 7 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 7 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 7 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 7 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 7 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 7 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 8 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 8 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 8 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 8 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 8 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 8 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 8 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 8 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 9 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 9 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 9 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 9 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 9 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 9 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 9 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 9 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p50 | 10 | --ncow 2000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p60 | 10 | --ncow 2000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p70 | 10 | --ncow 2000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n2000_p80 | 10 | --ncow 2000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p50 | 10 | --ncow 1000 --p1 0.50 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p60 | 10 | --ncow 1000 --p1 0.60 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p70 | 10 | --ncow 1000 --p1 0.70 --records one --spe 0 | G,GH,GS,GHS
+SB1_pc | n1000_p80 | 10 | --ncow 1000 --p1 0.80 --records one --spe 0 | G,GH,GS,GHS
