@@ -110,6 +110,10 @@ mkdir -p runs/founders && cp founders/founderSB_rep*.rds runs/founders/
 from the seed above. But MaCS did not run on our Windows laptop, and a different MaCS build or platform could change
 them. With the files, every route starts from the same genomes.
 
+**Regenerating them is possible on Linux:** on 14 November 2026 the code above, run for replicate 1 on the ILRI cluster
+(R 4.5.2, AlphaSimR 2.1.0.9014, `nThreads = 1`), wrote a file **bit-identical** to `founders/founderSB_rep01.rds`
+(same MD5). It took about 4.7 h at low priority (`nice`) on a busy shared login node, so a free core should be faster.
+
 **Checkpoint:** `md5sum founders/founderSB_rep01.rds` gives `e233474200e9ee760d5d7067833ccb30`.
 
 ---
@@ -318,4 +322,4 @@ saved truth (`B_pedigree.csv`: `check_same_sires` must be TRUE, `check_max_diff_
 | The pedigree rebuilt from the founders and seeds equals the saved data (`describe_population.R`, Part B) | yes, on Linux: the same bull for every cow and the same true breeding values (difference < 3e-15) in all 9 checks |
 | Route B end to end on a Windows laptop (R 4.5.1, INLA 26.6.7, AlphaSimR 2.1.0 from CRAN; synthetic backbone; n1000_p70_r01) | simulation, fits and scoring ran with `run_step1.sh`; bulls and daughters identical to the paper's data set; G slightly different (AlphaSimR version); GHS had the best WAIC (1,901 against GH 2,033, GS 2,234, G 2,686); GS estimated the range at 32 km (truth 33) |
 | Cross-validation in the same laptop run | yes: all 5 folds and the pooling ran (3.0 h; GHS folds 16–34 min). Masked r(EBV, a): G 0.254, GH 0.284, GS 0.317, GHS 0.332; training cows 0.388 / 0.418 / 0.448 / 0.451; cor(y, ŷ) 0.268 / 0.446 / 0.573 / 0.598. Same pattern as the README table (G < GH < GS ≈ GHS; masked cows well below training cows); one data set on a different map, so the values are not expected to equal the 1,000-cow means |
-| Founders regenerated from the seed with `runMacs` on Linux equal the supplied files | running at the time of writing |
+| Founders regenerated from the seed with `runMacs` on Linux equal the supplied files | yes, for replicate 1: the regenerated file has the same MD5 (e233474200e9ee760d5d7067833ccb30), so the founders are bit-identical (ILRI cluster, R 4.5.2, AlphaSimR 2.1.0.9014) |
