@@ -175,6 +175,11 @@ the same founders, bulls, cows and field in every cell, and each sub-step can be
 | 3.10 Records | 6 | +204, +205, +211 | each cow copies a random template cow's records and keeps one random test-day; residual N(0, 0.29); y = Xb + a + herd + field + e |
 | 3.11 Write | 7 | – | analyst files to `data/`, true values to `truth/`, log to `output/00_sim_summary.txt` |
 
+*Columns.* **Sub-step:** one piece of the simulation, in the order it runs. **Section of the script:** the numbered
+section of `sb_simulate.R` that does it. **Seed offset:** the number added to the replicate's base seed
+(20261001 + 1000 × replicate) before this draw, so each draw can be repeated alone; "–" = no random draw.
+**What happens:** what the sub-step does (MAF = minor allele frequency; N(0, v) = normal with mean 0 and variance v).
+
 **Files written:**
 
 | File | Contents |
@@ -249,6 +254,12 @@ r(EBV, a), slope of a on EBV, WAIC, marginal likelihood, minutes).
 | GS | 0.0298 | – | 0.484 | 53.3 | 0.486 | 0.404 | 2,272.2 |
 | GHS | ≈ 0 (collapsed) | 0.226 | 0.496 | 59.3 | 0.312 | 0.372 | 1,975.9 |
 
+*Columns.* The values your run should reproduce for this one data set. **σ̂²g:** estimated genetic variance (truth
+0.060). **σ̂²h:** herd variance (truth 0.150). **σ̂²s:** spatial-field variance (truth 0.41). **Range km:** distance at
+which farms' environments become almost unrelated (truth 33). **σ̂²e:** residual variance (truth 0.290). **r(EBV, a):**
+accuracy, the correlation of estimated with true breeding values. **WAIC:** prediction score of the fit, lower is
+better. "–" = the model has no such term; "collapsed" = σ̂²g at the bottom of the prior.
+
 (This data set is one of the step-1 collapses; with `--priors pc` GHS gives about 0.045.)
 
 ## Step 6. Cross-validation (`scripts/questions/q_validate.R`)
@@ -262,6 +273,12 @@ Rscript scripts/questions/q_validate.R --run runs_q/SB1_one_record/n1000_p70_r01
 - The predictions use 200 posterior samples (seed 1).
 - Writes `output/q_validate_kfold.csv`: for each model and for all, seen-herd and unseen-herd cows, it gives masked
   r(EBV, a), cor(y, ŷ) with its genetic and environmental parts, and training-cow r(EBV, a).
+  - **Masked cows:** the cows of the hidden fold. **Training cows:** the cows of the other four folds.
+  - **Seen-herd cows:** masked cows with at least one herd-mate among the training cows (the model knows that herd's
+    effect). **Unseen-herd cows:** masked cows with no herd-mate among the training cows (every single-cow herd, or a
+    small herd masked together), so the model has never seen a record from that farm.
+  - **Masked r(EBV, a):** correlation between a masked cow's EBV (from relatives only) and her true breeding value.
+    **cor(y, ŷ):** correlation between the hidden record and its prediction.
 - Run in replicates 1–5 only (as in the paper). About 45 min (1,000 cows) or 4 h (2,000 cows).
 
 ## Step 7. All data sets

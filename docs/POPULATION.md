@@ -59,6 +59,10 @@ flowchart LR
 | Genetic variance | true breeding values rescaled to variance exactly 0.060 in every data set |
 | G | VanRaden G from the cows' allele frequencies; G* = 0.99 G + 0.01 I |
 
+*Columns.* **Piece:** one part of the simulated genome or trait. **Setting:** its value (Mb = million base pairs;
+Morgan = genetic map length, 1 Morgan ≈ one crossover per meiosis; QTL = the DNA positions that truly affect milk
+yield; SNP chip = the markers used to build G; G = the genomic relationship matrix between cows).
+
 ## 3. Bulls and dams
 
 The bulls do not depend on the share of single-cow herds: the four herd structures of a replicate share them. Mean over
@@ -74,6 +78,13 @@ replicates; range in brackets.
 | Cows that are their bull's only daughter | 0.7 % | 0.8 % | 0.8 % |
 | Bull pairs that are half-brothers (replicates 1–3) | 1–10 of 4,950 | 25–37 of 19,900 | 106–131 of 79,800 |
 
+*Columns.* First column: the quantity. **1,000 / 2,000 / 4,000 cows:** its value in data sets of that size, mean over
+replicates with the range over replicates in brackets. Rows: **Bulls drawn:** bulls sampled as possible sires.
+**Bulls with at least one daughter:** bulls that actually sired a recorded cow. **Daughters per used bull:** among those
+bulls. **Daughters of the busiest bull:** the largest family. **Cows sired by the 10 busiest bulls:** the share of all
+cows. **Cows that are their bull's only daughter:** cows with no paternal half-sister. **Bull pairs that are
+half-brothers:** pairs of used bulls with the same father, out of all bull pairs.
+
 **Share of cows by their bull's number of daughters**
 
 | Daughters per bull | 1 | 2–4 | 5–9 | 10–19 | 20–49 | 50+ |
@@ -81,6 +92,9 @@ replicates; range in brackets.
 | 1,000 cows | 0.7 % | 7.6 % | 18.1 % | 27.3 % | 37.5 % | 8.8 % |
 | 2,000 cows | 0.8 % | 7.4 % | 18.7 % | 28.5 % | 33.3 % | 11.4 % |
 | 4,000 cows | 0.8 % | 8.0 % | 17.6 % | 27.4 % | 28.5 % | 17.7 % |
+
+*Columns.* **1 … 50+:** classes of family size, i.e. how many recorded daughters the cow's bull has (her own family
+included). *Each cell:* the share of cows whose bull falls in that class; each row adds up to 100 %.
 
 **Dams:**
 - They are drawn without repetition from the 5,000 females of generation 2, and **each has exactly one daughter**.
@@ -97,6 +111,11 @@ Pedigree class of every pair of cows; replicates 1 / 2 / 3. Mean G is not availa
 | Cousin level | 1/16 to < 1/4 | 4.7 / 2.6 / 3.6 | 0.05–0.06 | 9.0 / 9.6 / 7.1 | 0.06 | 18.4 / 15.7 / 17.2 |
 | Second-cousin level | 1/64 to < 1/16 | 47 / 47 / 52 | 0.01 | 104 / 101 / 100 | 0.01 | 203 / 218 / 210 |
 | Unrelated in the pedigree | 0 | 929 / 926 / 922 | −0.007 | 1,861 / 1,867 / 1,868 | −0.004 | 3,752 / 3,732 / 3,744 |
+
+*Columns.* **Class:** a kind of relative. **Pedigree relationship:** the additive relationship from the pedigree that
+defines the class (1/4 = paternal half-sisters). **per cow:** how many other cows of that class each cow has, on
+average, in replicates 1 / 2 / 3. **mean G:** the average genomic relationship of such pairs, measured from the SNPs
+(it can differ from the pedigree value because of Mendelian sampling and allele frequencies).
 
 - **Half-sisters share 0.24 on average in G, but anything from about 0.10 to 0.40** (Mendelian sampling, which G sees
   and the pedigree cannot). Almost every pair with G above 0.1 is a pair of half-sisters.
@@ -123,6 +142,12 @@ replicates.
 | 2,000 | 80 % / 79.9 % | 1,581 | 63.2 % | 241 / 60 / 10 / 6 | 569 | 1.3 % |
 | 4,000 | 70 % / 70.0 % | 2,874 | 50.3 % | 663 / 158 / 27 / 14 | 1,502 | 0.8 % |
 
+*Columns.* **Cows:** cows per data set. **Single-cow herds: target / realised:** the share of herds with exactly one
+cow, as designed and as obtained. **Herds:** number of herds. **Cows in single-cow herds:** the share of cows that
+are alone in their herd. **Herds with 2 / 3 / 4 / 5+ cows:** how many herds of each larger size. **Herd-mate pairs:**
+pairs of cows in the same herd (the only pairs that tell the model about the herd effect). **… that are half-sisters:**
+the share of those herd-mate pairs that also share a father.
+
 Herd-mates are related exactly as often as any two cows (half-sister pairs are 2.2 %, 1.2 % and 0.7 % of all pairs at
 1,000, 2,000 and 4,000 cows). The herd variance has to be learned from these few hundred herd-mate pairs.
 
@@ -143,6 +168,11 @@ this section describes the real farm layout, given only as distances and counts.
 | 2,000 | 50 / 60 / 70 / 80 % | 39 / 43 / 47 / 51 | 106 / 106 / 105 / 106 | 231 / 231 / 230 / 231 |
 | 4,000 | 70 % | 93 | 214 | 463 |
 
+*Columns.* **Single-cow herds:** the design's share of herds with one cow; the next three columns give one value per
+share, in the same order. **Herds within 10 km (median):** for each herd, how many other herds lie within 10 km; the
+median over herds. **Cows within 10 km / 33 km (mean):** for each cow, how many other cows live within that distance
+(33 km is the field's range); the mean over cows.
+
 **Correlation of the true field between two herds, by distance** (Matérn ν = 1, range 33 km; pooled over the 85 data
 sets)
 
@@ -151,9 +181,14 @@ sets)
 | Matérn, middle of the class | 0.95 | 0.76 | 0.49 | 0.22 | 0.04 | 0.00 | 0.00 | 0.00 |
 | Realised | 0.85 | 0.69 | 0.46 | 0.21 | −0.12 | −0.17 | −0.17 | −0.05 |
 
+*Columns.* **0–5 km … 200+ km:** classes of distance between two herds. Rows: **Matérn, middle of the class:** the
+correlation the field model gives at the middle distance of the class (the theory). **Realised:** the correlation of
+the true simulated field values between all pairs of herds in that class, pooled over the data sets.
+
 The realised correlations beyond 33 km are slightly negative. That is expected when one field per replicate is measured
 around its own mean over a large area. A herd with no records has 20–90 herds within 10 km whose environment is
-correlated about 0.7 with its own: this is what lets GS and GHS predict unseen herds.
+correlated about 0.7 with its own: this is what lets GS and GHS predict **unseen herds** (in cross-validation: herds
+with no cow at all in the training data, so the model has never seen a record from that farm).
 
 ## 7. Families on the map: how many half-sisters live close by
 
@@ -169,6 +204,12 @@ correlated about 0.7 with its own: this is what lets GS and GHS predict unseen h
 | 2,000 | 80 % | 24.2 | 0.7 % | 1.28 | 48 % | 2.82 | 72 % |
 | 4,000 | 70 % | 27.4 | 0.6 % | 1.47 | 50 % | 3.18 | 73 % |
 
+*Columns.* **Single-cow herds:** the design's share of herds with one cow. **Half-sisters per cow:** recorded cows with
+the same father, mean per cow. **Cows with a half-sister in their herd:** share of cows that have a paternal
+half-sister as a herd-mate. **Half-sisters within 10 km / 33 km (mean):** how many of a cow's half-sisters live within
+that distance of her farm. **Cows with ≥ 1 within 10 km / 33 km:** share of cows that have at least one half-sister
+that close.
+
 **Share of cow pairs that are half-sisters, by distance** (equal in every column if relatives are placed at random)
 
 | Cows | Same herd | 0–10 km | 10–33 km | 33–100 km | 100+ km |
@@ -176,6 +217,10 @@ correlated about 0.7 with its own: this is what lets GS and GHS predict unseen h
 | 1,000 | 2.29 % | 2.25 % | 2.21 % | 2.21 % | 2.20 % |
 | 2,000 | 1.18 % | 1.23 % | 1.22 % | 1.21 % | 1.21 % |
 | 4,000 | 0.80 % | 0.69 % | 0.69 % | 0.69 % | 0.69 % |
+
+*Columns.* **Same herd:** pairs of cows in the same herd. **0–10 km … 100+ km:** pairs of cows in different herds at
+that distance. *Each cell:* the share of those pairs that are paternal half-sisters. If relatives were clustered in
+space, the left-hand columns would be higher.
 
 **There is no spatial genetic structure:** half-sisters are spread over distances exactly like any two cows, and mean G
 is the same at every distance. A field and a genetic effect are told apart by who shares them (neighbours against
@@ -193,3 +238,6 @@ staying near their dams, would cluster relatives in space and could mix the two.
 | Neighbours are many and share the field strongly | The field is well estimated and predicts herds the model has never seen |
 | Relatives are scattered at random | No model puts environment into genetics; regional bulls in real data could change this |
 | The bulls are the same for every share of single-cow herds | Differences between herd-structure cells come from the herds alone |
+
+*Columns.* **Feature of the population:** a fact from the sections above. **Consequence in the step-1 results:** what
+it does to the estimates in the [README](../README.md).
