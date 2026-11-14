@@ -1,0 +1,47 @@
+# Software used for the step-1 results (ilri-hpc login/compute nodes, recorded 14 November 2026)
+# R version 4.5.2 (2025-10-31), x86_64-pc-linux-gnu, CentOS Stream 9
+# Package, version, install source (RemoteType RemoteUsername RemoteRepo RemoteRef RemoteSha Repository):
+AlphaSimR 2.1.0.9014 github gaynorr AlphaSimR devel a3d58f40cff595001935b835ba58b10be81030e5 - 
+INLA 26.08.07 - - - - - - 
+inlabru 2.15.0 - - - - - CRAN 
+fmesher 0.8.0 - - - - - CRAN 
+Matrix 1.7-4 - - - - - CRAN 
+dqrng 0.4.1 - - - - - CRAN 
+Rcpp 1.1.1-1.1 - - - - - CRAN 
+RcppArmadillo 15.2.7-1 - - - - - CRAN 
+sf 1.1-3 - - - - - CRAN 
+ggplot2 4.0.3 - - - - - CRAN 
+ragg not installed
+remotes 2.5.0 - - - - - CRAN 
+
+# sessionInfo() with INLA loaded:
+Platform: x86_64-pc-linux-gnu
+Running under: CentOS Stream 9
+
+Matrix products: default
+BLAS:   /export/apps/R/4.5/lib64/R/lib/libRblas.so 
+LAPACK: FlexiBLAS OPENBLAS-OPENMP;  LAPACK version 3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: Africa/Nairobi
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] INLA_26.08.07 Matrix_1.7-4 
+
+loaded via a namespace (and not attached):
+ [1] fmesher_0.8.0      lattice_0.22-7     e1071_1.7-17       splines_4.5.2     
+ [5] KernSmooth_2.23-26 lifecycle_1.0.5    classInt_0.4-11    sf_1.1-3          
+ [9] cli_3.6.6          grid_4.5.2         DBI_1.3.0          withr_3.0.2       
+[13] proxy_0.4-29       class_7.3-23       compiler_4.5.2     tools_4.5.2       
+[17] Rcpp_1.1.1-1.1     otel_0.2.0         rlang_1.2.0        units_1.0-1       

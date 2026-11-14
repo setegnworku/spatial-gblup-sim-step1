@@ -7,6 +7,11 @@
 **Status (14 November 2026):** step 1 is final (85 data sets, pooled 9 November 2026). The refit of the same data
 with PC priors is final (80 data sets, 10 November 2026). Steps 2 and 3 of the ladder are not in this repository.
 
+**To replicate step 1 from the genome onwards, follow [REPRODUCE.md](REPRODUCE.md).** It covers every step (founder
+genomes, population, genotypes and G, herds, spatial field, records, fits, scoring, cross-validation, pooling,
+figures), with seeds and checkpoints. The founder genomes and a synthetic stand-in for the real-data backbone are
+included, so the whole pipeline runs with `bash run_step1.sh`.
+
 **Contents**
 1. [Why we simulate](#1-why-we-simulate)
 2. [The ladder, and why step 1 comes first](#2-the-ladder-and-why-step-1-comes-first)
@@ -427,8 +432,13 @@ refitted).
 
 ```
 README.md                         this file
+REPRODUCE.md                      step-by-step replication, from the founder genomes to the tables, with checkpoints
+run_step1.sh                      runs every step for any set of data sets on one machine (no Slurm)
 docs/POPULATION.md                the simulated population: generations, families, herds, map, relatives close by
+founders/                         the 10 founder-genome files of the paper (MaCS, about 2 MB each) and their MD5 sums
+synthetic/backbone_synthetic.rds  synthetic stand-in for the real-data backbone (invented locations and records)
 scripts/
+  make_synthetic_backbone.R       builds synthetic/backbone_synthetic.rds
   questions/sb_simulate.R         simulate one data set (step 1: --records one --spe 0)
   questions/q_fit.R               fit G, GH, GS, GHS (--priors isidore = INLA's default, or --priors pc)
   questions/q_extract.R           compare the fits with the truth (bias, coverage, accuracy, slope, WAIC)
@@ -455,7 +465,9 @@ Comments further down sometimes cite project notes (`docs/...`) that are not in 
 their step-1 content. The scripts also serve later steps and other studies of the project, so some options are not
 used in step 1; the comment blocks say which.
 
-**One data set, by hand** (from the repository root; needs `data/backbone/backbone_tz.rds`, see Section 10):
+**One data set, by hand** (from the repository root; first put the founder files in `runs/founders/` and a backbone in
+`data/backbone/backbone_tz.rds`, see [REPRODUCE.md](REPRODUCE.md), Steps 1–2; `bash run_step1.sh` then runs all the
+steps below):
 
 ```bash
 RUN=runs_q/SB1_one_record/n1000_p70_r01
@@ -506,8 +518,10 @@ about 45 min at 1,000 cows and 4 h at 2,000.
   - `fixed_formula`, `meta`.
 
   No milk record of the real data is used: the simulated phenotypes are built only from the simulated effects and the
-  fixed-effect sizes. A stand-in with invented herd locations and recording patterns, in the same format, would let
-  the pipeline run end to end; it would not reproduce the numbers above exactly.
+  fixed-effect sizes.
+- **A synthetic stand-in is included:** `synthetic/backbone_synthetic.rds`, made by `scripts/make_synthetic_backbone.R`.
+  It has the same format, with invented herd locations and recording patterns. With it the whole pipeline runs end to
+  end; the results are similar in kind but not identical to the numbers above (REPRODUCE.md, route B).
 - **Per-data-set folders** (`runs_q/…`: simulated records, G and its inverse, fits) are not included: they are large and
   are rebuilt by the scripts. The pooled results in `results/` are what the README reports.
 

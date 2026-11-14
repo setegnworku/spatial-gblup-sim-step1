@@ -3,6 +3,10 @@ runs_q/
 runs/
 output/
 logs/
+tmp/
 *.rds
-# The backbone is derived from real field data and must never be committed.
+# ...except the founder genomes and the synthetic backbone, which are simulated / invented and needed to replicate.
+!founders/*.rds
+!synthetic/*.rds
+# The real backbone is derived from real field data and must never be committed.
 data/

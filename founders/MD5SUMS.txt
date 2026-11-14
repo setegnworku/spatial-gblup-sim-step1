@@ -1,0 +1,10 @@
+e233474200e9ee760d5d7067833ccb30 *founderSB_rep01.rds
+8b1a812fda09eb985ad0ee4a784db29a *founderSB_rep02.rds
+2477ff43463b572aa774bedfb43aee40 *founderSB_rep03.rds
+1d4e099c18a9f45baacd7e5a7a54e3c6 *founderSB_rep04.rds
+0ed5dc4b497800b5c990c7699c64522e *founderSB_rep05.rds
+a26a661861e03944a46d7fbb037a909f *founderSB_rep06.rds
+3c13bc8e3b8fb40f3583f34371e2b95b *founderSB_rep07.rds
+59b9add242cce95bf75bb59b3cc14eee *founderSB_rep08.rds
+88bab538b733cba60222c6c8d8b20213 *founderSB_rep09.rds
+7cbed030cfc08e7acb796c8c4f6ee727 *founderSB_rep10.rds
