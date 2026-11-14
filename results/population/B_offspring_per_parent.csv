@@ -1,0 +1,13 @@
+"who","what","mean","sd","min","max","n_parents","founders_unused"
+"founder sires","rep1: offspring in generation 1",6,0,6,6,500,0
+"founder dams","rep1: offspring in generation 1",6,0,6,6,500,0
+"generation-1 sires","rep1: offspring in generation 2",6.66666666666667,0.47156173424239,6,7,1500,0
+"generation-1 dams","rep1: offspring in generation 2",6.66666666666667,0.47156173424239,6,7,1500,0
+"founder sires","rep2: offspring in generation 1",6,0,6,6,500,0
+"founder dams","rep2: offspring in generation 1",6,0,6,6,500,0
+"generation-1 sires","rep2: offspring in generation 2",6.66666666666667,0.47156173424239,6,7,1500,0
+"generation-1 dams","rep2: offspring in generation 2",6.66666666666667,0.47156173424239,6,7,1500,0
+"founder sires","rep3: offspring in generation 1",6,0,6,6,500,0
+"founder dams","rep3: offspring in generation 1",6,0,6,6,500,0
+"generation-1 sires","rep3: offspring in generation 2",6.66666666666667,0.47156173424239,6,7,1500,0
+"generation-1 dams","rep3: offspring in generation 2",6.66666666666667,0.47156173424239,6,7,1500,0

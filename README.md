@@ -117,6 +117,10 @@ cell, so cells differ only in the design factor.
 
 2,000 cows at 70 % is the closest to the real data set (about 1,900 cows).
 
+**The population in detail:** [docs/POPULATION.md](docs/POPULATION.md) covers the generations, the bulls and their
+daughters, the dams, how related the cows are, the herds, the map and the spatial field, and how many half-sisters live
+close to each cow.
+
 ## 4. Models, priors and validation
 
 **Models** (script [`scripts/questions/q_fit.R`](scripts/questions/q_fit.R)). All have the same fixed effects as Houaga
@@ -423,6 +427,7 @@ refitted).
 
 ```
 README.md                         this file
+docs/POPULATION.md                the simulated population: generations, families, herds, map, relatives close by
 scripts/
   questions/sb_simulate.R         simulate one data set (step 1: --records one --spe 0)
   questions/q_fit.R               fit G, GH, GS, GHS (--priors isidore = INLA's default, or --priors pc)
@@ -431,6 +436,7 @@ scripts/
   questions/sb_aggregate.R        pool all data sets of a study into tables
   sim/_paths.R, _mesh.R, _fit_setup.R   shared helpers (folders, Houaga's mesh recipe, data and field set-up)
   make_readme_figures.R           the two figures of this README, from results/
+  describe_population.R           the numbers of docs/POPULATION.md (also rebuilds the pedigree of replicates 1-3)
 cluster/
   q_task.sbatch                   Slurm array job: one task = one data set
   tasks_SB1.txt                   the 80 data sets at 1,000 and 2,000 cows
@@ -440,6 +446,7 @@ results/
   step1_default_prior/            pooled output of sb_aggregate.R: report.md, sb_summary.csv (per cell x model),
                                   sb_by_rep.csv (per data set x model), sb_cv_by_rep.csv (cross-validation)
   step1_pc_prior/                 the same for the PC refit, plus waic_default_vs_pc.csv (WAIC per fit, both priors)
+  population/                     summary tables behind docs/POPULATION.md (counts and distances, no coordinates)
 figures/                          PNG figures of this README
 ```
 
