@@ -4,8 +4,12 @@
 > included. The simulator borrows the *structure* of a real data set (herd locations, herd sizes, recording pattern);
 > that input file is not shared (see [Data not included](#10-data-not-included)).
 
-**Status (14 November 2026):** step 1 is final (85 data sets, pooled 9 November 2026). The refit of the same data
-with PC priors is final (80 data sets, 10 November 2026). Steps 2 and 3 of the ladder are not in this repository.
+**Status (16 November 2026):** step 1 is final (85 data sets, pooled 9 November 2026). The refit of the same data
+with PC priors is final (80 data sets, 10 November 2026). The cross-validation results now use the agreed method:
+accuracy computed within each test group, then averaged (§4, §6.4).
+
+**Steps 2 and 3:** their objectives, design and the questions they answer are in
+[PLAN_STEPS_2_3.md](PLAN_STEPS_2_3.md). That page is a plan only; it holds no results.
 
 **To replicate step 1 from the genome onwards, follow [REPRODUCE.md](REPRODUCE.md).** It covers every step (founder
 genomes, population, genotypes and G, herds, spatial field, records, fits, scoring, cross-validation, pooling,
@@ -201,18 +205,21 @@ to be exceeded or not.
 affordable. On one data set it agreed with INLA's default integration to three decimals.
 
 **Cross-validation** (script [`scripts/questions/q_validate.R`](scripts/questions/q_validate.R)), replicates 1–5 of
-the 1,000- and 2,000-cow cells (40 data sets): the cows are split at random into 5 groups; each group's records are
-hidden in turn and predicted from a fit to the other four, so every cow is predicted once, **from her relatives only**.
-- **Masked cows** (test cows): the cows whose records are hidden in a round. **Training cows:** the cows of the other
+the 1,000- and 2,000-cow cells (40 data sets): the cows are split at random into 5 test groups; each group's records
+are hidden in turn and predicted from a fit to the other four, so every cow is a test cow once and is predicted
+**from her relatives only**.
+- **Test cows** (masked cows): the cows whose records are hidden in a round. **Training cows:** the cows of the other
   four groups, whose records the model is fitted to.
-- **Seen herd:** the masked cow's herd still has **at least one other cow among the training cows**, so the model has
-  already estimated that farm's herd effect from her herd-mates' records.
-- **Unseen herd:** the masked cow's herd has **no cow at all among the training cows**, so the model has never seen a
-  record from that farm: every single-cow herd, and a small herd whose cows were all masked in the same round. Only
-  the spatial field, learnt from neighbouring farms, can predict that farm's environment.
-- *Example:* herd A has cows A1, A2, A3; herd B has only B1. If A1 and B1 are masked in the same round while A2 and A3
-  are training cows, A1 is in a seen herd (the model knows herd A from A2 and A3) and B1 is in an unseen herd (no record
-  from farm B is left).
+- **How a result is computed:**
+  1. In each test group, the measure (for example r(EBV, a)) is computed for that group's test cows.
+  2. The 5 values are averaged, giving one value per data set.
+  3. The data sets are averaged within each scenario (number of cows × share of single-cow herds).
+  4. Standard errors come from replicate means, because the scenarios of one replicate share a simulated population.
+- *Changed on 15–16 November 2026:* earlier versions of this page pooled the predictions of the five test groups into one
+  correlation and split the test cows into "seen" and "unseen" herds. Both were dropped. Pooling mixes EBVs from
+  five different fits, which lowered the step-1 accuracy (for example GHS with 1,000 cows: 0.249 pooled against 0.294).
+- The **dispersion** of the test cows' EBVs (slope of the true on the estimated breeding value, computed in the same
+  way) is being added in a rerun started on 16 November 2026; it will appear here when complete.
 
 **What we measure** (scripts [`q_extract.R`](scripts/questions/q_extract.R) and
 [`sb_aggregate.R`](scripts/questions/sb_aggregate.R)):
@@ -246,7 +253,8 @@ comments repeat them).
 | **L8** | cor(y, ŷ) rises by +0.2 to +0.4 from G to GHS, almost all of it environment. For unseen herds GH is no better than G; only the field helps. |
 
 *Columns.* First column: the label of the expectation, used again in the results (§6.7). **Expectation:** what we
-predicted, in words. "Masked cows" and "unseen herds" are defined under *Cross-validation* in §4.
+predicted, in words. "Masked cows" (test cows) are defined under *Cross-validation* in §4. "Unseen herds" in L8 were
+herds with no cow among the training cows, a split that was later dropped (§4).
 
 After the default-prior results showed collapsed fits, the **PC-prior refit** was planned and its expectations written
 on **9 November 2026, before its results**:
@@ -352,40 +360,56 @@ data set, mean (WAIC scores prediction, lower is better; positive = worse than G
 
 ### 6.4 Cross-validation: cows predicted without their own records
 
-Replicates 1–5, 20 data sets per row. Every cow is predicted once from a fit without her records.
+Replicates 1–5. Every cow is a test cow once and is predicted from a fit without her records. Each measure is
+computed within each test group and averaged over the 5 groups (§4).
 
-| Cows | Model | r(EBV, a) masked: all | seen herds | unseen herds | r(EBV, a) training cows | cor(y, ŷ): all | seen herds | unseen herds |
-|---|---|---|---|---|---|---|---|---|
-| 1,000 | G | 0.198 | 0.195 | 0.198 | 0.357 | 0.280 | 0.271 | 0.284 |
-| 1,000 | GH | 0.221 | 0.219 | 0.222 | 0.386 | 0.452 | 0.601 | 0.284 |
-| 1,000 | GS | 0.253 | 0.243 | 0.259 | 0.427 | 0.625 | 0.639 | 0.610 |
-| 1,000 | GHS | 0.249 | 0.240 | 0.257 | 0.431 | 0.638 | 0.669 | 0.605 |
-| 2,000 | G | 0.233 | 0.235 | 0.229 | 0.365 | 0.291 | 0.281 | 0.301 |
-| 2,000 | GH | 0.256 | 0.251 | 0.258 | 0.405 | 0.480 | 0.624 | 0.314 |
-| 2,000 | GS | 0.308 | 0.305 | 0.310 | 0.451 | 0.641 | 0.639 | 0.644 |
-| 2,000 | **GHS** | **0.321** | 0.319 | 0.323 | 0.459 | **0.666** | 0.687 | 0.651 |
+**Accuracy of the test cows' EBVs, r(EBV, a), by share of single-cow herds**
 
-*Columns.* **r(EBV, a) masked:** for the **masked cows** (all their records hidden in that round), the correlation
-between the EBV each got from the fit without her records and her true breeding value; her EBV comes only from
-relatives among the training cows. It is split three ways:
-- **all:** every masked cow;
-- **seen herds:** masked cows whose herd still had at least one other cow among the training cows, so the model knew
-  that farm's herd effect;
-- **unseen herds:** masked cows whose herd had no cow among the training cows (every single-cow herd, or a small herd
-  masked together), so the model had never seen a record from that farm and only the field could predict it.
+| Cows | Model | 50 % | 60 % | 70 % | 80 % | All shares | Training cows (all shares) |
+|---|---|---|---|---|---|---|---|
+| 1,000 | G | 0.238 | 0.243 | 0.244 | 0.271 | 0.249 | 0.357 |
+| 1,000 | GH | 0.267 | 0.260 | 0.265 | 0.269 | 0.265 | 0.386 |
+| 1,000 | GS | 0.298 | 0.295 | 0.285 | 0.292 | 0.293 | 0.427 |
+| 1,000 | **GHS** | **0.300** | **0.297** | **0.287** | **0.293** | **0.294** | 0.431 |
+| 2,000 | G | 0.279 | 0.262 | 0.264 | 0.269 | 0.268 | 0.365 |
+| 2,000 | GH | 0.309 | 0.291 | 0.299 | 0.293 | 0.298 | 0.405 |
+| 2,000 | GS | 0.340 | 0.333 | 0.323 | 0.338 | 0.333 | 0.451 |
+| 2,000 | **GHS** | **0.346** | **0.335** | **0.334** | **0.340** | **0.339** | 0.459 |
 
-**r(EBV, a) training cows:** the same accuracy for the cows whose records were used in the fit, for comparison.
-**cor(y, ŷ):** Houaga's measure, the correlation between each hidden record y and its prediction ŷ (EBV + herd +
-field + fixed effects), split all / seen herds / unseen herds as above. All columns: no true value, higher is better.
+*Columns.* **Cows:** cows per data set. **Model:** as in §4. **50 % … 80 %:** the share of herds that have one cow;
+*each cell* is the accuracy of the test cows, the correlation between the EBV each test cow got from the fit without her
+records and her true breeding value, computed within each test group, averaged over the 5 groups of a data set and
+then over the 5 data sets (replicates) with that share. **All shares:** the mean of the 20 data sets. **Training cows:**
+the same accuracy for the cows whose records were used in the same fits, mean of the 20 data sets. Higher is better.
 
-- **A cow without a record** gets an EBV of accuracy 0.25 (1,000 cows) to 0.32 (2,000 cows) from GHS, against 0.43–0.46
-  for recorded cows.
-- **EBV accuracy is the same for seen and unseen herds**: the genetic part comes from relatives, who are spread over
-  many herds.
-- **Houaga's cor(y, ŷ) is mostly environment.** GHS reaches 0.64–0.67, but its genetic part, cor(y, fixed + EBV), is only
-  0.28–0.32 in every model. A perfect genetic prediction (the true breeding value) would reach about 0.46–0.47.
-- **Without a field, a new herd cannot be predicted:** for unseen herds GH gives 0.28–0.31, the same as G. With a field,
-  the neighbours predict it: GS and GHS 0.61–0.65.
+**Houaga's measure, cor(y, ŷ), by share of single-cow herds**
+
+| Cows | Model | 50 % | 60 % | 70 % | 80 % | All shares | Genetic part (all shares) |
+|---|---|---|---|---|---|---|---|
+| 1,000 | G | 0.281 | 0.309 | 0.290 | 0.262 | 0.286 | 0.286 |
+| 1,000 | GH | 0.502 | 0.490 | 0.441 | 0.405 | 0.459 | 0.299 |
+| 1,000 | GS | 0.617 | 0.627 | 0.632 | 0.639 | 0.629 | 0.321 |
+| 1,000 | **GHS** | **0.643** | **0.645** | **0.645** | **0.636** | **0.642** | 0.315 |
+| 2,000 | G | 0.305 | 0.290 | 0.311 | 0.301 | 0.302 | 0.302 |
+| 2,000 | GH | 0.511 | 0.502 | 0.487 | 0.434 | 0.483 | 0.315 |
+| 2,000 | GS | 0.643 | 0.650 | 0.638 | 0.639 | 0.643 | 0.319 |
+| 2,000 | **GHS** | **0.676** | **0.669** | **0.666** | **0.661** | **0.668** | 0.327 |
+
+*Columns.* *Each cell* in the share columns is cor(y, ŷ), the correlation between each hidden record y and its
+prediction ŷ (fixed effects + EBV + herd + field), computed within each test group and averaged as above. **All
+shares:** the mean of the 20 data sets. **Genetic part:** cor(y, fixed effects + EBV), the part of the prediction
+that comes from the fixed effects and the breeding value, mean of the 20 data sets. Higher is better; there is no true
+value.
+
+- **A cow without a record** gets an EBV of accuracy 0.29 (1,000 cows) to 0.34 (2,000 cows) from GHS, against 0.43–0.46
+  for the training cows.
+- **The share of single-cow herds hardly changes the test cows' accuracy** (GHS 0.287–0.300 with 1,000 cows and
+  0.334–0.346 with 2,000), because a test cow's EBV comes from relatives spread over many herds.
+- **Houaga's cor(y, ŷ) is mostly environment.** GHS reaches 0.64–0.68, but its genetic part, cor(y, fixed + EBV), is only
+  0.29–0.33 in every model. A perfect genetic prediction (the true breeding value) would reach about 0.46–0.47.
+- **Without a field, the environment of a cow alone in her herd cannot be predicted.** GH's cor(y, ŷ) falls as single-cow
+  herds become more common (0.50 → 0.41 with 1,000 cows; 0.51 → 0.43 with 2,000), whereas GS and GHS stay at 0.62–0.68
+  at every share: the field predicts that farm's environment from its neighbours.
 
 ### 6.5 By share of single-cow herds
 
@@ -419,15 +443,15 @@ the 10 data sets with that share (truth 0.060); in brackets the bias, estimate �
 | 1,000 | r(EBV, a), GHS | 0.446 | 0.430 | 0.447 | 0.437 |
 | 1,000 | r(EBV, a), GH | 0.407 | 0.386 | 0.414 | 0.377 |
 | 1,000 | Accuracy gain from the field, GHS − GH | +0.039 | +0.044 | +0.033 | **+0.060** |
-| 1,000 | Masked r(EBV, a), GHS (CV) | 0.251 | 0.274 | 0.235 | 0.236 |
+| 1,000 | Test-cow r(EBV, a), GHS (CV) | 0.300 | 0.297 | 0.287 | 0.293 |
 | 2,000 | Collapsed GHS fits (of 10), default prior | 0 | 0 | 0 | 0 |
 | 2,000 | σ̂²g with the PC prior (truth 0.060) | 0.060 | 0.054 | 0.055 | 0.060 |
 | 2,000 | σ̂²h (truth 0.150) | 0.162 | 0.150 | 0.156 | 0.157 |
 | 2,000 | r(EBV, a), GHS | 0.488 | 0.485 | 0.483 | 0.480 |
 | 2,000 | r(EBV, a), GH | 0.450 | 0.438 | 0.436 | 0.415 |
 | 2,000 | Accuracy gain from the field, GHS − GH | +0.038 | +0.047 | +0.047 | **+0.065** |
-| 2,000 | Masked r(EBV, a), GHS (CV) | 0.333 | 0.313 | 0.314 | 0.325 |
-| 2,000 | cor(y, ŷ) unseen herds, GHS / GH (CV) | 0.670 / 0.323 | 0.652 / 0.309 | 0.643 / 0.315 | 0.640 / 0.309 |
+| 2,000 | Test-cow r(EBV, a), GHS (CV) | 0.346 | 0.335 | 0.334 | 0.340 |
+| 2,000 | cor(y, ŷ), GHS / GH (CV) | 0.676 / 0.511 | 0.669 / 0.502 | 0.666 / 0.487 | 0.661 / 0.434 |
 
 *Columns.* **Measure:** what the row shows (default prior unless stated). **50 % … 80 %:** the share of herds that
 have one cow; each cell is the mean of 10 data sets (rows marked CV: 5). The measures:
@@ -436,9 +460,9 @@ have one cow; each cell is the mean of 10 data sets (rows marked CV: 5). The mea
 - **σ̂²h:** the herd variance.
 - **r(EBV, a):** accuracy, the correlation of estimated with true breeding values.
 - **Accuracy gain from the field:** r(EBV, a) of GHS minus that of GH.
-- **Masked r(EBV, a) (CV):** accuracy of cows whose records were hidden in cross-validation.
-- **cor(y, ŷ) unseen herds (CV):** the correlation between hidden records and predictions for cows whose herd had no
-  cow in the training data.
+- **Test-cow r(EBV, a) (CV):** accuracy of cows whose records were hidden in cross-validation, computed within each
+  test group and averaged (§4).
+- **cor(y, ŷ), GHS / GH (CV):** Houaga's measure for the test cows with GHS and with GH, computed in the same way.
 
 - **σ̂²g shows no trend with the share of single-cow herds.** Cells move by up to ±20 % in no order: with 10 data sets
   per cell and fits that collapse at random, a cell mean is noisy.
@@ -491,8 +515,8 @@ the 40 data sets the PC fit had the lower (better) WAIC.
 | **L2** | Herd–residual trade-off, worse at 80 % | Trade-off present; stronger at 80 % only at 2,000 cows | Partly |
 | **L3** | G and GS put the environment into σ²g; GH puts the field into the herd | GH: yes (0.50). G and GS put it into the **residual** | Half wrong |
 | **L4** | GHS accuracy 0.35–0.45 | 0.44 / 0.48 / 0.50 | Holds, at the top end and above |
-| **L7** | Masked 0.15–0.30, training 0.35–0.6, rising with N | GHS masked 0.25 → 0.32, training 0.43 → 0.46 | Holds |
-| **L8** | cor(y, ŷ) +0.2 to +0.4 from G to GHS, all environment; unseen herds GH ≈ G | +0.36 to +0.38, genetic part flat (0.28–0.32); unseen GH 0.31 ≈ G 0.30 | Holds |
+| **L7** | Masked 0.15–0.30, training 0.35–0.6, rising with N | GHS test cows 0.29 → 0.34, training 0.43 → 0.46 | Holds (test cows at the top end) |
+| **L8** | cor(y, ŷ) +0.2 to +0.4 from G to GHS, all environment; unseen herds GH ≈ G | +0.36 to +0.37, genetic part flat (0.29–0.33). The unseen-herd part held in the earlier pooled analysis (GH 0.31 ≈ G 0.30); that split is no longer reported | Holds |
 | **PC1** | Collapses disappear | 106 → 0 | Holds |
 | **PC2** | GHS at 1,000 cows about 0.05–0.06 | 0.060 | Holds |
 | **PC3** | GHS at 2,000 cows within 1 SE of 0.060 | 0.057, 0.6 SE | Holds: the prior caused the −18 % |
@@ -511,8 +535,9 @@ the 40 data sets the PC fit had the lower (better) WAIC.
    the genetic variance; a missing herd or field goes to the residual (G, GS) or to the herd (GH). With PC priors all
    four models are within −5 % to +13 % of the true σ²g.
 3. **The spatial field earns its place.** GHS has the best WAIC in 82 of 85 data sets, corrects the herd variance
-   (0.15 instead of GH's 0.50), adds +0.04 to +0.05 accuracy, and predicts the records of cows in herds it has never
-   seen almost as well as in seen herds (0.65 against 0.69), where GH cannot (0.31).
+   (0.15 instead of GH's 0.50), adds +0.04 to +0.05 accuracy for recorded cows and +0.03 to +0.04 for test cows, and
+   keeps predicting records as single-cow herds become more common (cor(y, ŷ) 0.64–0.68 at every share), where GH falls
+   to 0.41–0.43 at 80 %.
 4. **The number of cows matters more than the share of single-cow herds** for the genetic variance: noisy at 1,000,
    modestly low at 2,000 (with the default prior), right at 4,000. The share of single-cow herds does not move σ̂²g,
    but the field helps most at 80 %.
@@ -524,8 +549,8 @@ the 40 data sets the PC fit had the lower (better) WAIC.
 ## 8. What step 1 cannot tell
 
 - **One record per cow is not the real data**, which have about ten test-day records per cow. Repeated records and a
-  permanent environment are steps 2 and 3, not in this repository; they change the picture, because a cow effect can
-  then absorb a missing permanent environment.
+  permanent environment are steps 2 and 3. Their plan is in [PLAN_STEPS_2_3.md](PLAN_STEPS_2_3.md); their results are
+  not in this repository. They change the picture, because a cow effect can then absorb a missing permanent environment.
 - **Best-case world:** one breed, bulls used at random in space (no link between genetics and environment), and a field
   simulated from the same Matérn family that is fitted.
 - **10 replicates per cell** (5 at 4,000 cows, which exists only at 70 %; no cross-validation at 4,000). Cell means can
