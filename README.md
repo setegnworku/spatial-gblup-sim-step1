@@ -1,20 +1,92 @@
-# Spatial genomic models on simulated smallholder dairy data — Step 1: one record per cow
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/banner-dark.svg">
+    <img alt="Spatial genomic models for smallholder dairy cattle. Step 1 of 3: one record per cow. Simulated data." src="docs/assets/banner-light.svg" width="100%">
+  </picture>
+</p>
 
+<p align="center">
+  <img alt="Data: simulated" src="https://img.shields.io/badge/data-SIMULATED-eb6834?style=flat-square">
+  <img alt="Step 1: complete" src="https://img.shields.io/badge/step%201-complete-1baf7a?style=flat-square">
+  <img alt="Steps 2 and 3: plan only" src="https://img.shields.io/badge/steps%202%E2%80%933-plan%20only-8b8b8b?style=flat-square">
+  <img alt="R 4.5.2" src="https://img.shields.io/badge/R-4.5.2-2a78d6?style=flat-square&logo=r&logoColor=white">
+  <img alt="R-INLA 26.08.07" src="https://img.shields.io/badge/R--INLA-26.08.07-2a78d6?style=flat-square">
+  <img alt="inlabru 2.15.0" src="https://img.shields.io/badge/inlabru-2.15.0-2a78d6?style=flat-square">
+  <img alt="AlphaSimR 2.1.0.9014" src="https://img.shields.io/badge/AlphaSimR-2.1.0.9014-2a78d6?style=flat-square">
+  <a href="REPRODUCE.md"><img alt="Reproducible from the founder genomes" src="https://img.shields.io/badge/reproducible-from%20the%20genome-52514e?style=flat-square"></a>
+</p>
+
+<p align="center">
+  <a href="#at-a-glance"><b>At a glance</b></a> &nbsp;·&nbsp;
+  <a href="#1-why-we-simulate">Why simulate</a> &nbsp;·&nbsp;
+  <a href="#6-results">Results</a> &nbsp;·&nbsp;
+  <a href="#7-what-step-1-shows">What step 1 shows</a> &nbsp;·&nbsp;
+  <a href="REPRODUCE.md">Reproduce</a> &nbsp;·&nbsp;
+  <a href="docs/POPULATION.md">The population</a> &nbsp;·&nbsp;
+  <a href="PLAN_STEPS_2_3.md">Plan for steps 2–3</a>
+</p>
+
+> [!IMPORTANT]
 > **All results in this repository come from SIMULATED data.** No real milk record, animal or farm location is
 > included. The simulator borrows the *structure* of a real data set (herd locations, herd sizes, recording pattern);
 > that input file is not shared (see [Data not included](#10-data-not-included)).
 
-**Status (16 November 2026):** step 1 is final (85 data sets, pooled 9 November 2026). The refit of the same data
-with PC priors is final (80 data sets, 10 November 2026). The cross-validation results now use the agreed method:
-accuracy computed within each test group, then averaged (§4, §6.4).
+> [!NOTE]
+> **Status (16 November 2026):** step 1 is final (85 data sets, pooled 9 November 2026). The refit of the same data
+> with PC priors is final (80 data sets, 10 November 2026). The cross-validation results use the agreed method:
+> accuracy computed within each test group, then averaged (§4, §6.4).
+> **Steps 2 and 3:** their objectives, design and the questions they answer are in
+> [PLAN_STEPS_2_3.md](PLAN_STEPS_2_3.md). That page is a plan only; it holds no results.
 
-**Steps 2 and 3:** their objectives, design and the questions they answer are in
-[PLAN_STEPS_2_3.md](PLAN_STEPS_2_3.md). That page is a plan only; it holds no results.
+> [!TIP]
+> **To replicate step 1 from the genome onwards, follow [REPRODUCE.md](REPRODUCE.md).** It covers every step (founder
+> genomes, population, genotypes and G, herds, spatial field, records, fits, scoring, cross-validation, pooling,
+> figures), with seeds and checkpoints. The founder genomes and a synthetic stand-in for the real-data backbone are
+> included, so the whole pipeline runs with `bash run_step1.sh`.
 
-**To replicate step 1 from the genome onwards, follow [REPRODUCE.md](REPRODUCE.md).** It covers every step (founder
-genomes, population, genotypes and G, herds, spatial field, records, fits, scoring, cross-validation, pooling,
-figures), with seeds and checkpoints. The founder genomes and a synthetic stand-in for the real-data backbone are
-included, so the whole pipeline runs with `bash run_step1.sh`.
+## At a glance
+
+<p align="center">
+  <img src="figures/fig0_records_vs_breeding_values.png" width="100%"
+       alt="Dot plot for 2,000 cows in cross-validation. Prediction of records rises from 0.30 with G to 0.67 with GHS; accuracy of breeding values rises only from 0.27 to 0.34.">
+</p>
+
+Step 1 gives each simulated cow one record and fits the four models of Houaga et al. (2026). Four findings:
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**1 · Weak data need a sensible prior**<br>
+With INLA's default prior, 15 of 40 GHS fits at 1,000 cows collapsed to σ̂²g ≈ 0. A PC prior on the same data
+removed all 106 collapses and the bias ([§6.6](#66-refit-with-pc-priors-the-same-80-data-sets)).
+
+</td>
+<td width="50%" valign="top">
+
+**2 · The spatial field earns its place**<br>
+GHS had the best WAIC in 82 of 85 data sets, got the herd variance right (0.15, against 0.50 in GH) and added 0.04 to
+0.05 to the accuracy of breeding values ([§6.3](#63-accuracy-and-model-fit)).
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**3 · Judge breeding values, not records**<br>
+GHS predicts hidden records with cor(y, ŷ) 0.64–0.68, but the breeding values of the same cows have accuracy only
+0.29–0.34: most of the record prediction is environment ([§6.4](#64-cross-validation-cows-predicted-without-their-own-records)).
+
+</td>
+<td width="50%" valign="top">
+
+**4 · Cows matter more than herd structure**<br>
+With the default prior σ̂²g was right only with 4,000 cows. The share of single-cow herds did not move it, but the
+field helped most at 80 % single-cow herds ([§6.5](#65-by-share-of-single-cow-herds)).
+
+</td>
+</tr>
+</table>
 
 **Contents**
 1. [Why we simulate](#1-why-we-simulate)
@@ -560,6 +632,9 @@ the 40 data sets the PC fit had the lower (better) WAIC.
 
 ## 9. Repository layout and how to run
 
+<details>
+<summary><b>Repository layout</b> (click to open)</summary>
+
 ```
 README.md                         this file
 REPRODUCE.md                      step-by-step replication, from the founder genomes to the tables, with checkpoints
@@ -575,7 +650,7 @@ scripts/
   questions/q_validate.R          5-fold cross-validation (--cv kfold)
   questions/sb_aggregate.R        pool all data sets of a study into tables
   sim/_paths.R, _mesh.R, _fit_setup.R   shared helpers (folders, Houaga's mesh recipe, data and field set-up)
-  make_readme_figures.R           the two figures of this README, from results/
+  make_readme_figures.R           the three figures of this README, from results/
   describe_population.R           the numbers of docs/POPULATION.md (also rebuilds the pedigree of replicates 1-3)
 cluster/
   q_task.sbatch                   Slurm array job: one task = one data set
@@ -584,11 +659,14 @@ cluster/
   tasks_SB1pc.txt                 the PC-prior refit of the 80 data sets
 results/
   step1_default_prior/            pooled output of sb_aggregate.R: report.md, sb_summary.csv (per cell x model),
-                                  sb_by_rep.csv (per data set x model), sb_cv_by_rep.csv (cross-validation)
+                                  sb_by_rep.csv (per data set x model), sb_cv_by_rep.csv (cross-validation),
+                                  sb_cv_testpop_by_rep.csv (cross-validation, within each test group: §4, §6.4)
   step1_pc_prior/                 the same for the PC refit, plus waic_default_vs_pc.csv (WAIC per fit, both priors)
   population/                     summary tables behind docs/POPULATION.md (counts and distances, no coordinates)
 figures/                          PNG figures of this README
 ```
+
+</details>
 
 Each script starts with a comment block that explains its role in step 1, why it is needed, and what was expected.
 Comments further down sometimes cite project notes (`docs/...`) that are not in this repository; this README holds
@@ -608,7 +686,10 @@ Rscript scripts/questions/q_validate.R --run $RUN --cv kfold --qmodels G,GH,GS,G
 Rscript scripts/questions/sb_aggregate.R --question SB1_one_record      # after all data sets are done
 ```
 
-**All data sets on a Slurm cluster** (edit the `cd` line of `cluster/q_task.sbatch` to your clone; create `logs/`):
+<details>
+<summary><b>All data sets on a Slurm cluster</b> (click to open)</summary>
+
+Edit the `cd` line of `cluster/q_task.sbatch` to your clone; create `logs/`:
 
 ```bash
 # step 1, INLA's default prior: 80 data sets, cross-validation in replicates 1-5
@@ -625,6 +706,8 @@ SIMSCRIPT=scripts/questions/sb_simulate.R FITFLAGS="--priors pc" \
   sbatch --export=ALL,TASKS=cluster/tasks_SB1pc.txt --array=1-80%4 cluster/q_task.sbatch
 Rscript scripts/questions/sb_aggregate.R --question SB1_pc
 ```
+
+</details>
 
 Set `SIMSCRIPT` as shown: the job script's default simulator belongs to another study and is not in this repository.
 Seeds depend only on the replicate number (20261001 + 1000 × replicate), so a replicate gives the same founders,

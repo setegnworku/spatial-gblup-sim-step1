@@ -1,5 +1,8 @@
 # The simulated population: generations, families, herds and space
 
+<sub>[README](../README.md) &nbsp;·&nbsp; [Reproduce](../REPRODUCE.md) &nbsp;·&nbsp; **The population** &nbsp;·&nbsp; [Plan for steps 2–3](../PLAN_STEPS_2_3.md)</sub>
+
+> [!IMPORTANT]
 > **SIMULATED data.** This page describes the population behind the step-1 results in the [README](../README.md):
 > who the cows are, how they are related, how they sit in herds and on the map. It gives distances and counts only,
 > never coordinates.

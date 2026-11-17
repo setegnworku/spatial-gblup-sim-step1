@@ -1,4 +1,5 @@
-# Draws figures/fig1_ghs_genetic_variance.png and figures/fig2_where_variance_goes.png for README.md from the pooled
+# Draws figures/fig0_records_vs_breeding_values.png, fig1_ghs_genetic_variance.png and fig2_where_variance_goes.png
+# for README.md from the pooled
 # step-1 results in results/ (SIMULATED data). Run from the repository root:  Rscript scripts/make_readme_figures.R
 # Needs ggplot2 and ragg. Colours: categorical slots checked for colour-vision deficiency (adjacent pairs).
 args <- commandArgs(trailingOnly = TRUE)
@@ -97,4 +98,44 @@ p2 <- ggplot(comp, aes(y = model)) +
                       axis.text.y = element_text(colour = ink, size = 14, face = "bold"))
 agg_png(file.path(repo, "figures/fig2_where_variance_goes.png"), width = 1800, height = 900, res = 150, background = surface)
 print(p2); invisible(dev.off())
+# ---- Figure 0: predicting records is not predicting breeding values (cross-validation, 2,000 cows) --------
+# Source: results/step1_default_prior/sb_cv_testpop_by_rep.csv (one row per data set x model; each measure computed
+# within each of the 5 test groups and averaged, as in README section 4). Only data sets with all 5 groups are used.
+cv <- read.csv(file.path(repo, "results/step1_default_prior/sb_cv_testpop_by_rep.csv"))
+cv <- cv[cv$n_folds == 5 & grepl("^n2000", cv$cell), ]
+f0 <- aggregate(cbind(r_ebv_a, cor_y_yhat) ~ model, cv, mean)
+f0$n <- aggregate(r_ebv_a ~ model, cv, length)$r_ebv_a
+cat("\nFigure 0 (2,000 cows, test cows):\n"); print(f0)
+lab_r <- "Accuracy of breeding values, r(EBV, a)"
+lab_y <- "Prediction of records, cor(y, ŷ)"
+long <- rbind(data.frame(model = f0$model, what = lab_r, v = f0$r_ebv_a),
+              data.frame(model = f0$model, what = lab_y, v = f0$cor_y_yhat))
+long$what <- factor(long$what, levels = c(lab_r, lab_y))
+g_r <- f0$r_ebv_a[f0$model == "GHS"] - f0$r_ebv_a[f0$model == "G"]
+g_y <- f0$cor_y_yhat[f0$model == "GHS"] - f0$cor_y_yhat[f0$model == "G"]
+lev <- rev(c("G", "GH", "GS", "GHS"))
+f0$model <- factor(f0$model, levels = lev); long$model <- factor(long$model, levels = lev)
+ends <- long[long$model %in% c("G", "GHS"), ]
+ends$hj <- ifelse(ends$what == lab_r, 1.45, -0.45)
+p0 <- ggplot(long, aes(y = model)) +
+  geom_segment(data = f0, aes(x = r_ebv_a, xend = cor_y_yhat, yend = model), colour = grid, linewidth = 2.2,
+               lineend = "round") +
+  geom_point(aes(x = v, fill = what), shape = 21, size = 5, colour = surface, stroke = 1) +
+  geom_text(data = ends, aes(x = v, label = sprintf("%.2f", v), hjust = hj), colour = ink, size = 4.2) +
+  scale_fill_manual(values = c(c_def, c_pc)) +
+  scale_x_continuous(limits = c(0, 0.8), breaks = seq(0, 0.8, 0.2), expand = c(0, 0)) +
+  labs(x = "correlation, for cows predicted without their own records", y = NULL,
+       title = "Herd and field raise record prediction five times more than breeding-value accuracy",
+       subtitle = sprintf("From G to GHS: prediction of records +%.2f, accuracy of breeding values +%.2f. Step 1, 2,000 cows, five-fold cross-validation.",
+                          g_y, g_r),
+       caption = sprintf(paste0("SIMULATED data, INLA's default prior. Each dot: mean of %d data sets (replicates 1-5 x 4 herd structures); ",
+                                "measures computed within each test group.\nG = genetic only; GH + herd; GS + spatial field; ",
+                                "GHS herd + field (the true model)."), min(f0$n))) +
+  guides(fill = guide_legend(override.aes = list(size = 5))) +
+  theme_step1 + theme(panel.grid.major.y = element_blank(),
+                      panel.grid.major.x = element_line(colour = grid, linewidth = 0.4),
+                      axis.text.y = element_text(colour = ink, size = 14, face = "bold"))
+agg_png(file.path(repo, "figures/fig0_records_vs_breeding_values.png"), width = 1800, height = 760, res = 150,
+        background = surface)
+print(p0); invisible(dev.off())
 cat("written\n")

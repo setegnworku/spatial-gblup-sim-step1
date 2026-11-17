@@ -1,5 +1,8 @@
 # Steps 2 and 3: objectives, design and the questions they answer
 
+<sub>[README](README.md) &nbsp;·&nbsp; [Reproduce](REPRODUCE.md) &nbsp;·&nbsp; [The population](docs/POPULATION.md) &nbsp;·&nbsp; **Plan for steps 2–3**</sub>
+
+> [!IMPORTANT]
 > **Plan only. This page contains no results of steps 2 and 3.** All data are SIMULATED. Step 1 and its results are
 > in the [README](README.md).
 

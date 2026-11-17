@@ -1,5 +1,8 @@
 # Reproduce step 1, from the genome to the tables
 
+<sub>[README](README.md) &nbsp;·&nbsp; **Reproduce** &nbsp;·&nbsp; [The population](docs/POPULATION.md) &nbsp;·&nbsp; [Plan for steps 2–3](PLAN_STEPS_2_3.md)</sub>
+
+> [!IMPORTANT]
 > **SIMULATED data.** This guide walks through every step of step 1: the founder genomes, the population, the
 > genotypes and G, the herds, the spatial field, the records, the model fits, the scoring against the truth, the
 > cross-validation, the pooled tables and the figures. Each step lists its script, its seed, the files it writes, and a
